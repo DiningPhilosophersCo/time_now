@@ -5,6 +5,15 @@
 
 #define NANOS_PER_SECOND 1000000000
 
+
+#if (defined(WIN32) || defined(_WIN32))
+CAMLprim value time_now_nanoseconds_since_unix_epoch_or_zero()
+{
+  caml_failwith("not implemented for win32");
+  return Val_unit;
+}
+#else
+
 #if defined(JSC_POSIX_TIMERS)
 
 /* Note: this is imported noalloc if (and only if) ARCH_SIXTYFOUR is defined.
@@ -32,5 +41,7 @@ CAMLprim value time_now_nanoseconds_since_unix_epoch_or_zero()
   else
     return caml_alloc_int63(NANOS_PER_SECOND * (uint64_t)tp.tv_sec + (uint64_t)tp.tv_usec * 1000);
 }
+
+#endif
 
 #endif
